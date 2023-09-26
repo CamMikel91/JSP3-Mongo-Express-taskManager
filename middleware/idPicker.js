@@ -1,8 +1,5 @@
-const express = require('express');
-const router = express.Router();
-
 // Checks for the lowest available id
-function idPicker(array, task) {
+function idPicker(array) {
     let id = 1;
     while (array.find(task => task.id === id)) {
         id++;
