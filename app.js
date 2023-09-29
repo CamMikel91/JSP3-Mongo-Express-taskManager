@@ -1,12 +1,14 @@
 const fs = require('fs');
 const express = require('express');
 const TestApplication = require('./middleware/logger.js');
-const tasks = require('./routes/tasks.js');
+const tasksInMemory = require('./routes/tasksInMemory.js');
+const tasksDB = require('./routes/tasksDB.js');
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
-app.use('/api/tasks', tasks);
+app.use('/api/tasks/inmemory', tasksInMemory);
+app.use('/api/tasks', tasksDB);
 
 
 // When the application is loaded, append a message to the logger.txt file
