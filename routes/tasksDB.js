@@ -1,26 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const Task = require('../models/task');
 
+// Connect to MongoDB
 mongoose.connect('mongodb://127.0.0.1/taskDB')
     .then(() => console.log('Connected to MongoDB...\n'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
-
-// task Schema
-const taskSchema = new mongoose.Schema({
-    Title: String,
-    Task: String,
-    AdditionalInfo: String,
-    Category: String,
-    Tags: [String],
-    Severity: Number,
-    Completed: Boolean
-});
-
-// task Model
-const Task = mongoose.model('Task', taskSchema);
-
-// CRUD operations
 
 // Create a task
 router.post('/', async (req, res) => {
