@@ -1,14 +1,23 @@
 const fs = require('fs');
+const config = require('config');
 const express = require('express');
 const TestApplication = require('./middleware/logger.js');
 const tasksInMemory = require('./routes/tasksInMemory.js');
 const tasksDB = require('./routes/tasksDB.js');
+const users = require('./routes/users.js');
 const app = express();
 const PORT = 3000;
+
+// Check if the jwtPrivateKey is defined
+if (!config.get('jwtPrivateKey')) {
+    console.error('FATAL ERROR: jwtPrivateKey is not defined.');
+    process.exit(1);
+}
 
 app.use(express.json());
 app.use('/api/tasks/inmemory', tasksInMemory);
 app.use('/api/tasks', tasksDB);
+app.use('/api/users', users);
 
 
 // When the application is loaded, append a message to the logger.txt file

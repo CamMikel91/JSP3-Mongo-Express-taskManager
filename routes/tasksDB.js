@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Task = require('../models/task');
 const schema = require('../schemas/joiTask');
+const auth = require('../middleware/auth');
 
 // Connect to MongoDB
 mongoose.connect('mongodb://127.0.0.1/taskDB')
@@ -10,8 +11,7 @@ mongoose.connect('mongodb://127.0.0.1/taskDB')
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
 // Create a task
-
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     let task = {
         Title: req.body.Title,
         Task: req.body.Task,
@@ -37,13 +37,13 @@ router.post('/', async (req, res) => {
 });
 
 // Read all tasks
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
     const tasks = await Task.find();
     res.send(tasks);
 });
 
 // Read a single task
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
     const task = await Task.findById(req.params.id);
     if (!task) {
         return res.status(404).send('The task with the given ID was not found.');
@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a task
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     let requestedTask = {
         Title: req.body.Title,
         Task: req.body.Task,
@@ -77,7 +77,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete a task
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     const task = await Task.findByIdAndRemove(req.params.id);
     if (!task) {
         return res.status(404).send('The task with the given ID was not found.');
