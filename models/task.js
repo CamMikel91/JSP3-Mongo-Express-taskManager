@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
 
 // Mongoose Schema
 const taskSchema = new mongoose.Schema({
@@ -17,4 +18,16 @@ const taskSchema = new mongoose.Schema({
 // Mongoose Model
 const Task = mongoose.model('Task', taskSchema);
 
-module.exports = Task;
+// Joi Schema
+const schema = Joi.object({
+  Title: Joi.string().required(),
+  Task: Joi.string().max(25).required(),
+  AdditionalInfo: Joi.string().max(250),
+  Category: Joi.string().min(3).required(),
+  Tags: Joi.array().required().items(Joi.string().min(1)),
+  Severity: Joi.string().valid('Normal', 'Important', 'Critical').required(),
+  Completed: Joi.boolean().default(false).required()
+});
+
+exports.Task = Task;
+exports.schema = schema;
