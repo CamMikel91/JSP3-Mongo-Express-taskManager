@@ -5,6 +5,7 @@ const Joi = require('joi');
 const taskSchema = new mongoose.Schema({
     Title: {type: String, required: true},
     Task: {type: String, maxLength: 25, required: true},
+    Owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     AdditionalInfo: {type: String, maxLength: 250},
     Category: {type: String, minLength: 3, required: true},
     Tags: {type: [String], required: true, validate: {
@@ -22,6 +23,7 @@ const Task = mongoose.model('Task', taskSchema);
 const schema = Joi.object({
   Title: Joi.string().required(),
   Task: Joi.string().max(25).required(),
+  Owner: Joi.string().required(),
   AdditionalInfo: Joi.string().max(250),
   Category: Joi.string().min(3).required(),
   Tags: Joi.array().required().items(Joi.string().min(1)),

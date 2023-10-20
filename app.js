@@ -1,6 +1,7 @@
 const fs = require('fs');
 const config = require('config');
 const express = require('express');
+const mongoose = require('mongoose');
 const TestApplication = require('./middleware/logger.js');
 const tasksInMemory = require('./routes/tasksInMemory.js');
 const tasksDB = require('./routes/tasksDB.js');
@@ -13,6 +14,11 @@ if (!config.get('jwtPrivateKey')) {
     console.error('FATAL ERROR: jwtPrivateKey is not defined.');
     process.exit(1);
 }
+
+// Connect to MongoDB
+mongoose.connect('mongodb://127.0.0.1/taskDB')
+    .then(() => console.log('Connected to MongoDB...\n'))
+    .catch(err => console.error('Could not connect to MongoDB...', err));
 
 app.use(express.json());
 app.use('/api/tasks/inmemory', tasksInMemory);
