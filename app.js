@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const TestApplication = require("./middleware/logger.js");
 const tasksInMemory = require("./routes/tasksInMemory.js");
 const tasksDB = require("./routes/tasksDB.js");
+const genresDB = require("./routes/genresDB.js");
 const users = require("./routes/users.js");
 const app = express();
 const PORT = config.get("port") || 3000;
@@ -24,6 +25,7 @@ mongoose
 app.use(express.json());
 app.use("/api/tasks/inmemory", tasksInMemory);
 app.use("/api/tasks", tasksDB);
+app.use("/api/genres", genresDB);
 app.use("/api/users", users);
 
 // When the application is loaded, append a message to the logger.txt file
@@ -42,7 +44,7 @@ testApplication.on("loadApplication", () => {
 // Load the application
 testApplication.loadApplication("Application is loading...");
 
-app.listen(PORT, () => {
+app.listen(PORT || 5000, () => {
   fs.appendFile("logger.txt", `Server listening on port: ${PORT}\n`, (err) => {
     if (err) {
       fs.appendFile("logger.txt", `Error: ${err}\n`, (err) => {

@@ -1,6 +1,6 @@
 {
   "jwtPrivateKey": "",
-  "port": 3001,
+  "port": 5000,
   "db": "mongodb://127.0.0.1/taskDB",
   "requireAuth": false
 }

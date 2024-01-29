@@ -7,14 +7,12 @@ const auth = require("../middleware/auth");
 // Create a task
 router.post("/", auth, async (req, res) => {
   let task = {
-    Title: req.body.Title,
-    Task: req.body.Task,
-    Owner: req.user._id,
-    AdditionalInfo: req.body.AdditionalInfo,
-    Category: req.body.Category,
-    Tags: req.body.Tags,
-    Severity: req.body.Severity,
-    Completed: req.body.Completed,
+    title: req.body.title,
+    task: req.body.task,
+    owner: req.user._id,
+    category: req.body.category,
+    severity: req.body.severity,
+    completed: req.body.completed,
   };
 
   const { error, value } = schema.validate(task);
@@ -40,7 +38,7 @@ router.get("/", auth, async (req, res) => {
     }
 
     if (config.get("requireAuth") === true) {
-      const tasks = await Task.find({ Owner: req.user._id });
+      const tasks = await Task.find({ owner: req.user._id });
       res.send(tasks);
     }
   } catch (err) {
@@ -56,7 +54,7 @@ router.get("/:id", auth, async (req, res) => {
   }
 
   if (config.get("requireAuth") === true) {
-    if (task.Owner != req.user._id) {
+    if (task.owner != req.user._id) {
       return res.status(401).send("Access denied.");
     }
   }
@@ -67,14 +65,12 @@ router.get("/:id", auth, async (req, res) => {
 // Update a task
 router.put("/:id", auth, async (req, res) => {
   let requestedTask = {
-    Title: req.body.Title,
-    Task: req.body.Task,
-    Owner: req.user._id,
-    AdditionalInfo: req.body.AdditionalInfo,
-    Category: req.body.Category,
-    Tags: req.body.Tags,
-    Severity: req.body.Severity,
-    Completed: req.body.Completed,
+    title: req.body.title,
+    task: req.body.task,
+    owner: req.user._id,
+    category: req.body.category,
+    severity: req.body.severity,
+    completed: req.body.completed,
   };
   const { error, value } = schema.validate(requestedTask);
   if (error) {
@@ -87,7 +83,10 @@ router.put("/:id", auth, async (req, res) => {
           .status(404)
           .send("The task with the given ID was not found.");
       }
-      if (currentTask.Owner != req.user._id) {
+      if (
+        currentTask.owner != req.user._id &&
+        config.get("requireAuth") === true
+      ) {
         return res.status(401).send("Access denied.");
       }
       const updatedTask = await Task.findByIdAndUpdate(req.params.id, value, {
@@ -106,7 +105,7 @@ router.delete("/:id", auth, async (req, res) => {
   if (!currentTask) {
     return res.status(404).send("The task with the given ID was not found.");
   }
-  if (currentTask.Owner != req.user._id) {
+  if (currentTask.owner != req.user._id && config.get("requireAuth") === true) {
     return res.status(401).send("Access denied.");
   }
   const removedTask = await Task.findByIdAndRemove(req.params.id);
