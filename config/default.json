@@ -2,5 +2,6 @@
   "jwtPrivateKey": "",
   "port": 5000,
   "db": "mongodb://127.0.0.1/taskDB",
-  "requireAuth": false
+  "apiUrl": "http://localhost:3000/api",
+  "requireAuth": true
 }

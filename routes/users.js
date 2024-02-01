@@ -54,11 +54,17 @@ router.post("/register", async (req, res) => {
   });
   await user.save();
 
-  // Send the user object back to the client
-  res.send({
-    name: user.name,
-    email: user.email,
-  });
+  // Generate a token and add header,
+  // then send the user object back to the client
+  const token = user.generateAuthToken();
+  res
+    .header("x-auth-token", token)
+    .header("access-control-expose-headers", "x-auth-token")
+    .send({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    });
 });
 
 module.exports = router;
